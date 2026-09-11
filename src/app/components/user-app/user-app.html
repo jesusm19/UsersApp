@@ -1,0 +1,22 @@
+<div class="container my-4">
+    <h3>{{ title }}</h3>
+    <div class="row">
+        <div class="col">
+            <app-user-form 
+                [user]="userSelected"
+                (userEventEmitter)="addUser($event)"
+                >
+                </app-user-form>
+        </div>
+
+        <div class="col">
+            
+            <app-user-grid 
+                [users]="users"
+                (deleteUserEvent)="deleteUser($event)"
+                (editUserEvent)="editUser($event)"
+            ></app-user-grid>
+
+        </div>
+    </div>
+</div>
