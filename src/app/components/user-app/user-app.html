@@ -1,16 +1,12 @@
 <div class="container my-4">
     <h3>{{ title }}</h3>
-    <div class="row">
+    <button 
+        (click)="setOpenForm()" 
+        class="btn btn-primary">
+        {{ isOpenForm ? 'Cerrar formulario' : 'Crear usuario' }}
+    </button>
+    <div class="row"> 
         <div class="col">
-            <app-user-form 
-                [user]="userSelected"
-                (userEventEmitter)="addUser($event)"
-                >
-                </app-user-form>
-        </div>
-
-        <div class="col">
-            
             <app-user-grid 
                 [users]="users"
                 (deleteUserEvent)="deleteUser($event)"
@@ -18,5 +14,20 @@
             ></app-user-grid>
 
         </div>
+
     </div>
 </div>
+ @if (isOpenForm) {
+
+    <div class="abrir-modal animacion fadeIn">
+        <app-user-form 
+            [user]="userSelected"
+            (userEventEmitter)="addUser($event)"
+            (openEventEmitter)="setOpenForm()"
+            >
+        </app-user-form>
+
+    </div>
+
+}
+
