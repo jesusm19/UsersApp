@@ -1,25 +1,24 @@
 import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
 import { User } from '../../models/user';
 import { UserService } from '../../services/user';
-import { OnInit } from '@angular/core';
-import { UserGridComponent } from "../user-child/user-grid";
-import { UserFormComponent } from "../user-form/user-form";
+
 import Swal from 'sweetalert2';
+import { NavbarComponent } from '../navbar/navbar';
 
 @Component({
-  imports: [UserGridComponent, UserFormComponent],
+  imports: [RouterOutlet, NavbarComponent],
   selector: 'user-app',
   styleUrls: ['./user-app.css'],
   templateUrl: './user-app.html',
 })
 export class UserAppComponent implements OnInit {
 
-  title: string = 'Listado de usuarios';
-
   users: User[] = [];
   userSelected: User;
 
-  isOpenForm: boolean = false;
 
   constructor(private userService: UserService) {
     this.userSelected = new User(0, '', '', '','','');
@@ -35,13 +34,11 @@ export class UserAppComponent implements OnInit {
       console.log(`Updating user: ${JSON.stringify(user)}`);
       this.users = this.users.map(u => u.id === user.id ? {...user} : u);
       this.confirmAddUser();
-      this.setOpenForm();
       return;
     } 
 
     this.users = [...this.users, {... user}];
     this.confirmAddUser();
-    this.setOpenForm();
 
   }
 
@@ -69,7 +66,6 @@ export class UserAppComponent implements OnInit {
 
   editUser(userId: number): void {
     this.userSelected = {... this.users.find(user => user.id === userId) ?? this.userSelected};
-    this.isOpenForm = true;
   }
 
   confirmAddUser(): void {
@@ -82,7 +78,4 @@ export class UserAppComponent implements OnInit {
     this.userSelected = new User(0, '', '', '','','');
   }
 
-  setOpenForm(): void {
-    this.isOpenForm = !this.isOpenForm;
-  }
 }

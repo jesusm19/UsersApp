@@ -13,7 +13,6 @@ export class UserFormComponent {
 
   @Input() user: User;
   @Output() userEventEmitter = new EventEmitter<User>();
-  @Output() openEventEmitter = new EventEmitter();
 
   constructor() {
     this.user = new User(0, '', '', '', '', '');
@@ -35,9 +34,4 @@ export class UserFormComponent {
     userForm.resetForm();
     userForm.reset();
   }
-
-  onOpenClose(): void {
-    this.openEventEmitter.emit();
-  }
-
 }
