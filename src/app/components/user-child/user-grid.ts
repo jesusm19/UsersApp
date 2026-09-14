@@ -1,6 +1,8 @@
 import { Component, EventEmitter } from '@angular/core';
 import { User } from '../../models/user';
 import { RouterModule, Router } from '@angular/router';
+import { UserService } from '../../services/user';
+import { SharingData } from '../../services/sharing-data';
 
 @Component({
   imports: [RouterModule],
@@ -13,22 +15,22 @@ export class UserGridComponent {
 
   users: User[] = [];
 
-  deleteUserEvent = new EventEmitter<number>();
-
-  editUserEvent = new EventEmitter<number>();
-
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private sharingData: SharingData,
+  ) {
     //this.users = this.router.getCurrentNavigation()?.extras.state?.['users'] || [];
-    this.users = this.router.currentNavigation()?.extras.state?.['users'] || [];
+    if (this.router.currentNavigation()?.extras.state?.['users']) {
+      this.users = this.router.currentNavigation()?.extras.state?.['users'] || [];
+    } else {
+      this.userService.findAll().subscribe(users => this.users = users);
+    }
   }
 
   deleteUser(userId: number): void {
     console.log(`Deleting user with ID: ${userId}`);
-    this.deleteUserEvent.emit(userId);
+    this.sharingData.deleteUserEventEmitter.emit(userId);
   }
   
-  editUser(userId: number): void {
-    console.log(`Editing user with ID: ${userId}`);
-    this.editUserEvent.emit(userId);
-  }
 }

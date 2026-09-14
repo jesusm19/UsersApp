@@ -10,7 +10,7 @@ export const routes: Routes = [
         path:'users/create', component: UserFormComponent
     },
     {
-        path:'users/edit', component: UserFormComponent
+        path:'users/edit/:id', component: UserFormComponent
     },
     {
         path: '', redirectTo: '/users', pathMatch: 'full' 
