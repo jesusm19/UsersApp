@@ -10,6 +10,7 @@ export class SharingData {
     private userEventEmitter = new EventEmitter<User>();
     private deleteUserEvent = new EventEmitter<number>();
     private findUserByIdEvent = new EventEmitter<number>();
+    private selectedUserEvent = new EventEmitter<User>();
 
     get userEventEmmiter(): EventEmitter<User> {
         return this.userEventEmitter;
@@ -21,6 +22,10 @@ export class SharingData {
 
     get findUserByIdEventEmitter(): EventEmitter<number> {
         return this.findUserByIdEvent;
+    }
+
+    get selectedUserEventEmitter(): EventEmitter<User> {
+        return this.selectedUserEvent;
     }
 
 }

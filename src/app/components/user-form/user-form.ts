@@ -26,6 +26,13 @@ export class UserFormComponent implements OnInit {
 
   }
   ngOnInit(): void {
+
+    this.sharingData.selectedUserEventEmitter.subscribe((user: User) => {
+      if (user && user.id != -1) {
+        this.user = {...user};
+      }
+    });
+
     this.route.paramMap.subscribe(params => {
       const userId:number = +(params.get('id') || '0');
       if (userId > 0) {

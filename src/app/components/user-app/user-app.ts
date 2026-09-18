@@ -82,6 +82,7 @@ export class UserAppComponent implements OnInit {
       const user = this.users.find(u => u.id === userId);
       if (user) {
         console.log(`Found user by ID: ${JSON.stringify(user)}`);
+        this.sharingData.selectedUserEventEmitter.emit(user);
       }
     });
   }
