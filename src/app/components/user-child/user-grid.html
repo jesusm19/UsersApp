@@ -5,7 +5,7 @@
         {{ 'Crear usuario' }}
     </button>
 
-@if (users.length == 0) {
+@if (users().length == 0) {
     <div class="alert alert-warning">
         Usuarios no encontrados.
     </div>
@@ -24,7 +24,7 @@
         </tr>
         </thead>
         <tbody>
-        @for (user of users; track $index) {
+        @for (user of users(); track $index) {
             <tr>
                 <td>{{ user.id }}</td>
                 <td>{{ user.name }}</td>

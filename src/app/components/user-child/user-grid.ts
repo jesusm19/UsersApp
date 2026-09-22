@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { User } from '../../models/user';
 import { RouterModule, Router } from '@angular/router';
 import { UserService } from '../../services/user';
@@ -9,23 +9,30 @@ import { SharingData } from '../../services/sharing-data';
   selector: 'app-user-grid',
   templateUrl: './user-grid.html',
 })
-export class UserGridComponent {
+export class UserGridComponent implements OnInit {
 
   title: string = 'Listado de usuarios';
 
-  users: User[] = [];
+  users = signal<User[]>([]);
 
   constructor(
     private router: Router,
     private userService: UserService,
     private sharingData: SharingData,
   ) {
-    //this.users = this.router.getCurrentNavigation()?.extras.state?.['users'] || [];
-    if (this.router.currentNavigation()?.extras.state?.['users']) {
-      this.users = this.router.currentNavigation()?.extras.state?.['users'] || [];
-    } else {
-      this.userService.findAll().subscribe(users => this.users = users);
+  }
+
+  ngOnInit(): void {
+    const navigationUsers = this.router.currentNavigation()?.extras.state?.['users'];
+    const historyUsers = history.state?.['users'];
+    const usersFromNavigation = navigationUsers ?? historyUsers;
+
+    if (usersFromNavigation) {
+      this.users.set(usersFromNavigation);
+      return;
     }
+
+    this.userService.findAll().subscribe(users => this.users.set(users));
   }
 
   deleteUser(userId: number): void {
