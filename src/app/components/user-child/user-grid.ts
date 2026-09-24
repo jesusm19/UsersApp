@@ -23,15 +23,6 @@ export class UserGridComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const navigationUsers = this.router.currentNavigation()?.extras.state?.['users'];
-    const historyUsers = history.state?.['users'];
-    const usersFromNavigation = navigationUsers ?? historyUsers;
-
-    if (usersFromNavigation) {
-      this.users.set(usersFromNavigation);
-      return;
-    }
-
     this.userService.findAll().subscribe(users => this.users.set(users));
   }
 

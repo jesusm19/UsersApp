@@ -10,11 +10,29 @@ export class UserService {
 
     private users: User[] = [];
 
+    private url = 'http://localhost:8080/api/users'; 
+
     constructor(private http: HttpClient) {
 
     }
 
     findAll(): Observable<User[]> {
-        return this.http.get<User[]>('http://localhost:8080/api/users/findAll');
+        return this.http.get<User[]>(`${this.url}/findAll`);
+    }
+
+    findById(id: number): Observable<User> {
+        return this.http.get<User>(`${this.url}/findById/${id}`);
+    }
+
+    create(user: User): Observable<User> {
+        return this.http.post<User>(`${this.url}/save`, user);
+    }
+
+    update(user: User): Observable<User> {
+        return this.http.put<User>(`${this.url}/update/${user.id}`, user);
+    }
+
+    delete(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.url}/delete/${id}`);
     }
 }

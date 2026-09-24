@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input, ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -7,6 +7,7 @@ import { OnInit } from '@angular/core';
 import { SharingData } from '../../services/sharing-data';
 
 import { User } from '../../models/user';
+import { UserService } from '../../services/user';
 
 @Component({
   imports: [FormsModule, CommonModule],
@@ -17,27 +18,29 @@ export class UserFormComponent implements OnInit {
 
   user: User;
 
+  private cdr = inject(ChangeDetectorRef);
+
   constructor(
+    private userService: UserService,
     private sharingData: SharingData,
     private route: ActivatedRoute,
   ) {
 
-    this.user = new User(0, '', '', '', '', '');
+    this.user = new User();
 
   }
   ngOnInit(): void {
 
-    this.sharingData.selectedUserEventEmitter.subscribe((user: User) => {
-      if (user && user.id != -1) {
-        this.user = {...user};
-      }
-    });
-
     this.route.paramMap.subscribe(params => {
       const userId:number = +(params.get('id') || '0');
+      console.log(`Retrieved user ID from route: ${userId}`);
       if (userId > 0) {
-        console.log(`Editing user with ID: ${userId}`);
-        this.sharingData.findUserByIdEventEmitter.emit(userId);
+        this.userService.findById(userId).subscribe(user => {
+            console.log(`Retrieved user from service: ${JSON.stringify(user)}`);
+          this.user = {...user};
+          // OnPush: the HTTP response arrives outside a template-triggered event, so force a check.
+          this.cdr.markForCheck();
+        });
       }
     });
   }
@@ -53,8 +56,9 @@ export class UserFormComponent implements OnInit {
   }
 
   onClear(userForm: any): void {
-    this.user = new User(0, '', '', '','','');
+    this.user = new User();
     userForm.resetForm();
     userForm.reset();
   }
 }
+

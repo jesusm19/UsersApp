@@ -37,15 +37,23 @@ export class UserAppComponent implements OnInit {
   
   addUser(): void {
     this.sharingData.userEventEmmiter.subscribe((user: User) => {
-      if (user && user.id != 0) { 
+      if (user && user.id && user.id != 0) { 
         console.log(`Updating user: ${JSON.stringify(user)}`);
-        this.users = this.users.map(u => u.id === user.id ? {...user} : u);
-        this.confirmAddUser();
+        this.userService.update(user).subscribe(
+          userUpdated => {
+            this.users = this.users.map(u => u.id === userUpdated.id ? {...userUpdated} : u);
+            this.confirmAddUser();
+            
+          }
+        );
         return;
       } 
-  
-      this.users = [...this.users, {... user}];
-      this.confirmAddUser();
+      this.userService.create(user).subscribe(
+        userCreated => {
+          this.users = [...this.users, {...userCreated}];
+          this.confirmAddUser();
+        }
+      );
     });
 
   }
@@ -62,14 +70,17 @@ export class UserAppComponent implements OnInit {
         confirmButtonText: "¡Sí, bórralo!"
       }).then((result) => {
         if (result.isConfirmed) {
-          this.users = this.users.filter(user => user.id !== userId);
-          this.router.navigate(['/users/create'], { skipLocationChange: true }).then(() => {
-            this.router.navigate(['/users'], {state: {users: this.users}});
-          });
-          Swal.fire({
-            title: "¡Eliminado!",
-            text: "Tu archivo ha sido eliminado.",
-            icon: "success"
+          this.userService.delete(userId).subscribe(() => {
+
+            this.users = this.users.filter(user => user.id !== userId);
+            this.router.navigate(['/users/create'], { skipLocationChange: true }).then(() => {
+              this.router.navigate(['/users']);
+            });
+            Swal.fire({
+              title: "¡Eliminado!",
+              text: "Tu archivo ha sido eliminado.",
+              icon: "success"
+            });
           });
         }
       });
@@ -89,7 +100,7 @@ export class UserAppComponent implements OnInit {
   }
 
   confirmAddUser(): void {
-    this.router.navigate(['/users'], {state: {users: this.users}});
+    this.router.navigate(['/users']);
     Swal.fire({
     title: "Guardado!",
     text: "¡El usuario ha sido guardado correctamente!",
