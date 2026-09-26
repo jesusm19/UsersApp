@@ -39,21 +39,27 @@ export class UserAppComponent implements OnInit {
     this.sharingData.userEventEmmiter.subscribe((user: User) => {
       if (user && user.id && user.id != 0) { 
         console.log(`Updating user: ${JSON.stringify(user)}`);
-        this.userService.update(user).subscribe(
-          userUpdated => {
+        this.userService.update(user).subscribe({
+          next: (userUpdated) => {
             this.users = this.users.map(u => u.id === userUpdated.id ? {...userUpdated} : u);
             this.confirmAddUser();
             
+          },
+          error: (err) => {
+            console.error(`Error updating user: ${err}`);
           }
-        );
+        });
         return;
       } 
-      this.userService.create(user).subscribe(
-        userCreated => {
+      this.userService.create(user).subscribe({
+        next: (userCreated) => {
           this.users = [...this.users, {...userCreated}];
           this.confirmAddUser();
+        },
+        error: (err) => {
+          console.error(`Error creating user: ${err}`);
         }
-      );
+      });
     });
 
   }
