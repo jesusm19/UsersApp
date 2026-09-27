@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { RouterOutlet, Router } from '@angular/router';
+import { RouterOutlet, Router, ActivatedRoute } from '@angular/router';
 
 import { User } from '../../models/user';
 import { UserService } from '../../services/user';
@@ -23,13 +23,17 @@ export class UserAppComponent implements OnInit {
   constructor(
     private sharingData: SharingData,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
   }
 
   ngOnInit(): void {
-    this.userService.findAll().subscribe(users => this.users = users);
-    console.log(`Loaded users: ${JSON.stringify(this.users)}`);
+    this.route.paramMap.subscribe(params => {
+      const page = Number(params.get('page')) || 0;
+      this.userService.findAllPageable(page).subscribe(pagable => this.users = pagable.content as User[]);
+      console.log(`Loaded users: ${JSON.stringify(this.users)}`);
+    });
     this.addUser();
     this.deleteUser();
     this.findUserById();

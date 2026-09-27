@@ -1,10 +1,13 @@
 import { Routes } from '@angular/router';
 import { UserFormComponent } from './components/user-form/user-form';
-import { UserGridComponent } from './components/user-child/user-grid';
+import { UserGridComponent } from './components/user-grid/user-grid';
 
 export const routes: Routes = [
     {
         path:'users' , component: UserGridComponent
+    },
+    {
+        path:'users/page/:page' , component: UserGridComponent
     },
     {
         path:'users/create', component: UserFormComponent

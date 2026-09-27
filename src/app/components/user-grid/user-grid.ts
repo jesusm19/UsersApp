@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { User } from '../../models/user';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user';
 import { SharingData } from '../../services/sharing-data';
 
@@ -19,11 +19,15 @@ export class UserGridComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private sharingData: SharingData,
+    private route: ActivatedRoute,
   ) {
   }
 
   ngOnInit(): void {
-    this.userService.findAll().subscribe(users => this.users.set(users));
+    this.route.paramMap.subscribe(params => {
+      const page = Number(params.get('page')) || 0;
+      this.userService.findAllPageable(page).subscribe(pagable => this.users.set(pagable.content as User[]));
+    });
   }
 
   deleteUser(userId: number): void {
