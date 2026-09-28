@@ -110,7 +110,7 @@ export class UserAppComponent implements OnInit {
   }
 
   confirmAddUser(): void {
-    this.router.navigate(['/users']);
+    this.router.navigate(['/users/page/0']);
     Swal.fire({
     title: "Guardado!",
     text: "¡El usuario ha sido guardado correctamente!",

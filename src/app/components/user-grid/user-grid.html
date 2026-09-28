@@ -14,7 +14,6 @@
     <table class="table table-striped table-hover">
         <thead>
         <tr>
-            <th>ID</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Correo</th>
@@ -26,7 +25,6 @@
         <tbody>
         @for (user of users(); track $index) {
             <tr>
-                <td>{{ user.id }}</td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.lastname }}</td>
                 <td>{{ user.email }}</td>
@@ -49,3 +47,5 @@
         </tbody>
     </table>
 }
+
+<app-paginator [url]="'/users/page'" [paginator]="paginator"></app-paginator>

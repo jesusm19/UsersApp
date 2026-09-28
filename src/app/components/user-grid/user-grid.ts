@@ -3,17 +3,18 @@ import { User } from '../../models/user';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user';
 import { SharingData } from '../../services/sharing-data';
+import { PaginatorComponent } from './paginator/paginator';
 
 @Component({
-  imports: [RouterModule],
+  imports: [RouterModule, PaginatorComponent],
   selector: 'app-user-grid',
   templateUrl: './user-grid.html',
 })
 export class UserGridComponent implements OnInit {
 
   title: string = 'Listado de usuarios';
-
   users = signal<User[]>([]);
+  paginator: any;
 
   constructor(
     private router: Router,
@@ -26,7 +27,10 @@ export class UserGridComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const page = Number(params.get('page')) || 0;
-      this.userService.findAllPageable(page).subscribe(pagable => this.users.set(pagable.content as User[]));
+      this.userService.findAllPageable(page).subscribe(pagable => {
+        this.users.set(pagable.content as User[])
+        this.paginator = pagable;
+      });
     });
   }
 
