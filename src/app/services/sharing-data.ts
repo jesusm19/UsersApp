@@ -11,6 +11,7 @@ export class SharingData {
     private deleteUserEvent = new EventEmitter<number>();
     private findUserByIdEvent = new EventEmitter<number>();
     private selectedUserEvent = new EventEmitter<User>();
+    private loginEventEmmiter = new EventEmitter<{ username: string, password: string }>();
 
     get userEventEmmiter(): EventEmitter<User> {
         return this.userEventEmitter;
@@ -26,6 +27,10 @@ export class SharingData {
 
     get selectedUserEventEmitter(): EventEmitter<User> {
         return this.selectedUserEvent;
+    }
+
+    get loginEventEmitter(): EventEmitter<{ username: string, password: string }> {
+        return this.loginEventEmmiter;
     }
 
 }

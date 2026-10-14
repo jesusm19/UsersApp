@@ -8,6 +8,7 @@ import { UserService } from '../../services/user';
 import Swal from 'sweetalert2';
 import { NavbarComponent } from '../navbar/navbar';
 import { SharingData } from '../../services/sharing-data';
+import { AuthService } from '../../services/auth';
 
 @Component({
   imports: [RouterOutlet, NavbarComponent],
@@ -23,6 +24,7 @@ export class UserAppComponent implements OnInit {
   constructor(
     private sharingData: SharingData,
     private userService: UserService,
+    private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -37,6 +39,7 @@ export class UserAppComponent implements OnInit {
     this.addUser();
     this.deleteUser();
     this.findUserById();
+    this.handleLogin();
   } 
   
   addUser(): void {
@@ -106,6 +109,31 @@ export class UserAppComponent implements OnInit {
         console.log(`Found user by ID: ${JSON.stringify(user)}`);
         this.sharingData.selectedUserEventEmitter.emit(user);
       }
+    });
+  }
+
+  handleLogin(): void {
+    this.sharingData.loginEventEmitter.subscribe((credentials: { username: string, password: string }) => {
+      this.authService.login(credentials.username, credentials.password).subscribe({
+        next: response => {
+          const token = response.token;
+          const payload = token.split('.')[1];
+          const decodedPayload = JSON.parse(atob(payload));
+          this.router.navigate(['/users']);
+        },
+        error: error => {
+          console.error(`Error al iniciar sesión: ${error}`);
+          if (error.status === 401) {
+            Swal.fire({
+              title: "Error",
+              text: "Credenciales incorrectas",
+              icon: "error"
+            });
+          } else {
+            throw error;
+          }
+        }
+      });
     });
   }
 
