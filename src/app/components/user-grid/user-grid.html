@@ -1,9 +1,14 @@
 <h3>{{ title }}</h3>
+    
+@if(isAdmin){
     <button
         [routerLink]="['/users/create']"
         class="btn btn-primary my-4">
         {{ 'Crear usuario' }}
     </button>
+
+}
+
 
 @if (users().length == 0) {
     <div class="alert alert-warning">
@@ -18,8 +23,10 @@
             <th>Apellido</th>
             <th>Correo</th>
             <th>Usuario</th>
-            <th>Eliminar</th>
-            <th>Editar</th>
+            @if(isAdmin){
+                <th>Eliminar</th>
+                <th>Editar</th>
+            }
         </tr>
         </thead>
         <tbody>
@@ -29,18 +36,20 @@
                 <td>{{ user.lastname }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.username }}</td>
-                <td>
-                    <button class="btn btn-danger btn-sm"
-                        (click)="deleteUser(user.id)">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </td>
-                <td>
-                    <button class="btn btn-success btn-sm"
-                        [routerLink]="['/users/edit', user.id]">
-                        <i class="bi bi-pencil"></i>
-                    </button>
-                </td>
+                @if(isAdmin){
+                    <td>
+                        <button class="btn btn-danger btn-sm"
+                            (click)="deleteUser(user.id)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-sm"
+                            [routerLink]="['/users/edit', user.id]">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                    </td>
+                }
             </tr>
     
         }

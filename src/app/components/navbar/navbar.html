@@ -11,17 +11,26 @@
             class="nav-link active" 
             aria-current="page" 
             [routerLink]="['/users']"
-            >Usuarios</a>
+            >Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/users/create']">Crear usuario</a>
-        </li>
+        @if(isAdmin){
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/users/create']">Crear usuario</a>
+          </li>
+
+        }
       </ul>
     </div>
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarNavLogin">
       <span class="nav-item text-primary mx-3">
-        <a class="nav-link btn btn-outline-primary" [routerLink]="['/login']">Login</a>
+        @if(login.isAuth){
+          <b>{{login.user.username}}</b>
+          <a class="nav-link btn btn-outline-danger" (click)="logout()">Logout</a>
+        } @else {
+          <a class="nav-link btn btn-outline-primary" [routerLink]="['/login']">Login</a>
+
+        }
       </span>
     </div>
   </div>

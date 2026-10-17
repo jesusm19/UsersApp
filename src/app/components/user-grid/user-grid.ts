@@ -4,6 +4,7 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user';
 import { SharingData } from '../../services/sharing-data';
 import { PaginatorComponent } from './paginator/paginator';
+import { AuthService } from '../../services/auth';
 
 @Component({
   imports: [RouterModule, PaginatorComponent],
@@ -17,8 +18,8 @@ export class UserGridComponent implements OnInit {
   paginator: any;
 
   constructor(
-    private router: Router,
     private userService: UserService,
+    private authService: AuthService,
     private sharingData: SharingData,
     private route: ActivatedRoute,
   ) {
@@ -37,6 +38,10 @@ export class UserGridComponent implements OnInit {
   deleteUser(userId: number): void {
     console.log(`Deleting user with ID: ${userId}`);
     this.sharingData.deleteUserEventEmitter.emit(userId);
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
   
 }
