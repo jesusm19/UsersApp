@@ -80,29 +80,33 @@
                     }
                 }
             </div>
-            <div>
-                <input 
-                    placeholder="Password"
-                    type="password"
-                    name="password"
-                    [(ngModel)]="user.password"
-                    required
-                    minlength="6"
-                    #password="ngModel"
-                class="form-control my-2">
-                @if (password.invalid && (password.dirty || password.touched)) {
-                    @if (password.errors!['required']) {
-                        <div class="text-danger">
-                            El password es requerido.
-                        </div>
+
+            @if (user.id == 0 ) {
+                <div>
+                    <input 
+                        placeholder="Password"
+                        type="password"
+                        name="password"
+                        [(ngModel)]="user.password"
+                        required
+                        minlength="6"
+                        #password="ngModel"
+                    class="form-control my-2">
+                    @if (password.invalid && (password.dirty || password.touched)) {
+                        @if (password.errors!['required']) {
+                            <div class="text-danger">
+                                El password es requerido.
+                            </div>
+                        }
+                        @if (password.errors!['minlength']) {
+                            <div class="text-danger">
+                                El password debe tener al menos 6 caracteres.
+                            </div>
+                        }
                     }
-                    @if (password.errors!['minlength']) {
-                        <div class="text-danger">
-                            El password debe tener al menos 6 caracteres.
-                        </div>
-                    }
-                }
-            </div>
+                </div>
+
+            }
             
             <div class="text-end mt-4">
                 <button 
